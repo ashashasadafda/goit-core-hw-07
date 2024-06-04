@@ -99,6 +99,21 @@ class AddressBook(UserDict):
     def __str__(self):
         return '\n'.join(str(record) for record in self.data.values())
 
+def change_phone(args, book):
+    name, phone = args
+    record = book.find(name)
+    if record is None:
+        return f"Уонтакту з ім'ям {name} не знайдено"
+    record.change_phone(phone)
+    return f"Комер для контаку {name} змінено на {phone} =)"
+
+def show_phone(args, book):
+    name, *_ = args
+    record = book.find(name)
+    if record is None:
+        return f"Уонтакту з ім'ям {name} не знайдено"
+    return f"Номер контакта {name}: {record.show_phone()}"
+
 def input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -159,7 +174,10 @@ def main():
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
-        command, *args = parse_input(user_input)
+        if not user_input.strip():
+            print("Ви нічого не ввелию Будь ласка, введіть команду)")
+        else:
+            command, args = parse_input(user_input)
 
         if command in ["close", "exit"]:
             print("Good bye!")
@@ -182,3 +200,6 @@ def main():
             print(birthdays(args, book))
         else:
             print("Invalid command.")
+
+if __name__ == "__main__":
+    main()
